@@ -77,6 +77,9 @@ targets = ["thumbv7em-none-eabihf"]
 # Compile with one of these "runtime" features if the program
 # will be directly flashed to an MCU; ie not a library.
 [features]
+
+default = ["embedded_hal", "h7rt", "h747cm7"]
+
 f3rt = ["stm32f3/rt"]
 f4rt = ["stm32f4/rt"]
 l4rt = ["stm32l4/rt"]

@@ -737,7 +737,7 @@ impl<R> i2c::ErrorType for I2c<R> {
 #[cfg(feature = "embedded_hal")]
 impl<R> i2c::I2c for I2c<R>
 where
-    R: Deref<Target = pac::i2c1::RegisterBlock>,
+    R: Deref<Target = pac::i2c1::RegisterBlock> + RccPeriph,
 {
     fn transaction(
         &mut self,

@@ -190,6 +190,10 @@ pub enum Port {
     H,
     #[cfg(any(feature = "h747cm4", feature = "h747cm7", feature = "l4x6",))]
     I,
+    #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+    J,
+    #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+    K,
 }
 
 impl Port {
@@ -257,6 +261,10 @@ impl Port {
             Self::H => 7,
             #[cfg(any(feature = "h747cm4", feature = "h747cm7", feature = "l4x6",))]
             Self::I => 8,
+            #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+            Self::J => 9,
+            #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+            Self::K => 10,
         }
     }
 }
@@ -821,6 +829,22 @@ impl Pin {
                             rcc.ahb2rstr.modify(|_, w| w.gpioirst().clear_bit());
                         }
                     }
+                }
+            }
+            #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+            Port::J => {
+                if rcc.ahb4enr.read().gpiojen().bit_is_clear() {
+                    rcc.ahb4enr.modify(|_, w| w.gpiojen().set_bit());
+                    rcc.ahb4rstr.modify(|_, w| w.gpiojrst().set_bit());
+                    rcc.ahb4rstr.modify(|_, w| w.gpiojrst().clear_bit());
+                }
+            }
+            #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+            Port::K => {
+                if rcc.ahb4enr.read().gpioken().bit_is_clear() {
+                    rcc.ahb4enr.modify(|_, w| w.gpioken().set_bit());
+                    rcc.ahb4rstr.modify(|_, w| w.gpiokrst().set_bit());
+                    rcc.ahb4rstr.modify(|_, w| w.gpiokrst().clear_bit());
                 }
             }
         }
@@ -1394,6 +1418,10 @@ const fn regs(port: Port) -> *const pac::gpioa::RegisterBlock {
         Port::H => crate::pac::GPIOH::ptr() as _,
         #[cfg(any(feature = "h747cm4", feature = "h747cm7", feature = "l4x6"))]
         Port::I => crate::pac::GPIOI::ptr() as _,
+        #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+        Port::J => crate::pac::GPIOJ::ptr() as _,
+        #[cfg(any(feature = "h747cm4", feature = "h747cm7"))]
+        Port::K => crate::pac::GPIOK::ptr() as _,
     }
 }
 
